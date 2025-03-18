@@ -32,8 +32,8 @@ def load_file(uploaded_file):
 def analyze_performance(data):
     numeric_data = data.iloc[:, 1:].apply(pd.to_numeric, errors='coerce')
     data['Орташа балл'] = numeric_data.mean(axis=1, skipna=True)
-    
     recommendations = []
+    
     for score in data['Орташа балл']:
         if pd.isna(score):
             rec = "❓ Мәлімет жоқ"
@@ -66,27 +66,12 @@ if uploaded_file:
         result = analyze_performance(df)
         st.write("📊 **Оқушылардың оқу жетістіктерін талдау:**")
         st.dataframe(result)
-
-        # 📈 Дұрыс диаграмма жасау
-        st.subheader("📊 Орташа балл диаграммасы")
-
-        # 🔍 Орташа балдарды бүтін сандарға айналдыру
-        result["Орташа балл"] = result["Орташа балл"].round(1).astype(str)
-
-        # 🟦 Seaborn countplot() қолдану
-        fig, ax = plt.subplots(figsize=(8, 6))
-        sns.countplot(x="Орташа балл", data=result, palette="Blues_r", ax=ax)
-
-        # 🏷 Диаграмма баптаулары
-        ax.set_xlabel("Орташа балл", fontsize=12)
-        ax.set_ylabel("Оқушылар саны", fontsize=12)
-        ax.set_title("📊 Орташа балл диаграммасы", fontsize=14, fontweight='bold')
-        ax.grid(axis='y', linestyle='--', alpha=0.7)
-
-        # 📊 Графикті көрсету
+        st.subheader("📈 Орташа балл диаграммасы")
+        fig, ax = plt.subplots()
+        sns.histplot(result['Орташа балл'], bins=10, kde=True, ax=ax)
+        ax.set_xlabel("Орташа балл")
+        ax.set_ylabel("Оқушылар саны")
         st.pyplot(fig)
-
-        # 📥 Excel жүктеу батырмасы
         excel_data = download_excel(result)
         st.download_button(label="📥 Excel форматында жүктеу",
                            data=excel_data,
