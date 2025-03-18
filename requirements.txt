@@ -1,3 +1,8 @@
 streamlit
 pandas
+openai
 azure-ai-textanalytics
+matplotlib
+seaborn
+openpyxl
+pyodbc
