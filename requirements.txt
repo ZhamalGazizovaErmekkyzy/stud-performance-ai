@@ -1,8 +1,10 @@
 streamlit
 pandas
-openai
-azure-ai-textanalytics
+numpy
 matplotlib
 seaborn
 openpyxl
 pyodbc
+chardet  # Кодтау қатесін шешу үшін
+azure-ai-textanalytics
+azure-core
