@@ -6,9 +6,13 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from openpyxl import Workbook
 
+# 🎯 Басты тақырып
 st.title("📚 Оқушылардың оқу жетістіктерін талдау")
+
+# 📂 Файл жүктеу
 uploaded_file = st.file_uploader("Файлды жүктеңіз", type=["csv", "xlsx", "xls", "json", "txt"])
 
+# 📥 Файлды оқу функциясы
 def load_file(uploaded_file):
     if uploaded_file is not None:
         file_type = uploaded_file.name.split('.')[-1]
@@ -29,6 +33,7 @@ def load_file(uploaded_file):
         return df
     return None
 
+# 📊 Орташа баллды есептеу және ұсыныстар беру
 def analyze_performance(data):
     numeric_data = data.iloc[:, 1:].apply(pd.to_numeric, errors='coerce')
     data['Орташа балл'] = numeric_data.mean(axis=1, skipna=True)
@@ -50,6 +55,7 @@ def analyze_performance(data):
     data['Ұсыныстар'] = recommendations
     return data
 
+# 📥 Excel жүктеу
 def download_excel(df):
     output = io.BytesIO()
     workbook = Workbook()
@@ -60,18 +66,27 @@ def download_excel(df):
     workbook.save(output)
     return output.getvalue()
 
+# 🏁 Егер файл жүктелсе, деректерді өңдеу
 if uploaded_file:
     df = load_file(uploaded_file)
     if df is not None:
         result = analyze_performance(df)
+
+        # 📊 Кесте түрінде көрсету
         st.write("📊 **Оқушылардың оқу жетістіктерін талдау:**")
         st.dataframe(result)
-        st.subheader("📈 Орташа балл диаграммасы")
+
+        # 📈 Дөңгелек диаграмма (Pie Chart)
+        st.subheader("📊 Орташа балл бойынша үлес диаграммасы")
         fig, ax = plt.subplots()
-        sns.histplot(result['Орташа балл'], bins=10, kde=True, ax=ax)
-        ax.set_xlabel("Орташа балл")
-        ax.set_ylabel("Оқушылар саны")
+        colors = sns.color_palette("pastel")  # Түрлі түсті палитра
+        score_counts = result['Орташа балл'].round(1).value_counts().sort_index()
+        
+        ax.pie(score_counts, labels=score_counts.index, autopct='%1.1f%%', colors=colors, startangle=140)
+        ax.set_title("Орташа балл үлесі")
         st.pyplot(fig)
+
+        # 📥 Excel жүктеу батырмасы
         excel_data = download_excel(result)
         st.download_button(label="📥 Excel форматында жүктеу",
                            data=excel_data,
