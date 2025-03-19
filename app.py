@@ -6,6 +6,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from openpyxl import Workbook
 
+AZURE_AI_KEY = "5k96MSu2fN6fBVk8tWz9ijkteXyhaD7GrOWr3AZVM94ce5ZkPLVOJQQJ99BCACYeBjFXJ3w3AAAAACOGy7RA"
+AZURE_AI_ENDPOINT = "https://teacherai.openai.azure.com/"
+
 # 🎯 Басты тақырып
 st.title("📚 Оқушылардың оқу жетістіктерін талдау")
 
